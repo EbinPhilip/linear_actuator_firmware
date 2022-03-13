@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "programmer": "arduino:arduinoasisp",
+    "sketch": "linear_drive.ino",
+    "port": "/dev/ttyACM1"
+}

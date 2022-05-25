@@ -19,6 +19,10 @@
                 "/home/ebin/Downloads/arduino-1.8.15/hardware/arduino/avr/cores/arduino",
                 "/home/ebin/Downloads/arduino-1.8.15/hardware/arduino/avr/variants/standard",
                 "/home/ebin/Arduino/libraries/AccelStepper/src",
+<<<<<<< HEAD
+=======
+                "/home/ebin/Arduino/libraries/ros_lib",
+>>>>>>> temp 2
                 "/home/ebin/Downloads/arduino-1.8.15/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
                 "/home/ebin/Downloads/arduino-1.8.15/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
                 "/home/ebin/Downloads/arduino-1.8.15/hardware/tools/avr/avr/include"

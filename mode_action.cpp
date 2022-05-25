@@ -131,6 +131,7 @@ void FineHomingAction::run()
         {
             stepper.stop();
             actuator_.changeMode(Mode::READY);
+            stepper.setCurrentPosition(0);
         }
         else
         {
@@ -166,19 +167,22 @@ ReadyAction::ReadyAction(LinearActuator& actuator)
 void ReadyAction::initialize()
 {
     AccelStepper& stepper = actuator_.getStepper();
-    stepper.setCurrentPosition(0);
+    stepper.stop();
 }
 
 void ReadyAction::run()
 {
-    if (!actuator_.getMaxAcceleration() 
-        || !actuator_.getMaxPosition() || !actuator_.getMaxSpeed())
+    if (!actuator_.isEnabled())
     {
         // do nothing
     }
     else
     {
-        actuator_.changeMode(Mode::ACTIVE);
+        if (actuator_.getMaxAcceleration()>0.00
+        && actuator_.getMaxPosition()>0.00 && actuator_.getMaxSpeed()>0.00)
+        {
+            actuator_.changeMode(Mode::ACTIVE);
+        }
     }
 }
 
@@ -200,6 +204,26 @@ void ActiveAction::initialize()
 void ActiveAction::run()
 {
     AccelStepper& stepper = actuator_.getStepper();
+    if (!actuator_.isEnabled())
+    {
+        actuator_.changeMode(Mode::READY);
+    }
+
+    if (stepper.targetPosition() != actuator_.getTargetPosition())
+    {
+        stepper.moveTo(actuator_.getTargetPosition());
+        stepper.setSpeed(actuator_.getTargetSpeed());
+    }
+
+    if (stepper.distanceToGo()!= 0 &&
+    !(actuator_.getEndStopStatus() && abs(stepper.currentPosition())>200) )
+    {
+        stepper.runSpeed();
+    }
+    else
+    {
+        stepper.stop();
+    }
 }
 
 Mode ActiveAction::getMode()

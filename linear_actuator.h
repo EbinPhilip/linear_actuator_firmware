@@ -29,18 +29,24 @@ public:
     Mode getCurrentMode();
 
     long getCurrentPosition();
-    long getCurrentSpeed();
+    float getCurrentSpeed();
 
     void setTargetPosition(long position_cmd);
-    void setTargetSpeed(long speed_cmd);
+    void setTargetSpeed(float speed_cmd);
+
+    long getTargetPosition();
+    float getTargetSpeed();
 
     void setMaxPosition(long max_position);
-    void setMaxSpeed(long max_speed);
-    void setMaxAcceleration(long max_acceleration);
+    void setMaxSpeed(float max_speed);
+    void setMaxAcceleration(float max_acceleration);
+
+    bool isEnabled();
+    void setEnabled(bool enabled);
 
     long getMaxPosition();
-    long getMaxSpeed();
-    long getMaxAcceleration();
+    float getMaxSpeed();
+    float getMaxAcceleration();
 
     void run();
 
@@ -50,11 +56,13 @@ protected:
     volatile bool& homing_start_;
 
     long position_cmd_;
-    long speed_cmd_;
+    float speed_cmd_;
 
     long max_position_;
-    long max_speed_;
-    long max_acceleration_;
+    float max_speed_;
+    float max_acceleration_;
+
+    bool enabled_;
 
     StartingAction starting_action_;
     HomingAction homing_action_;

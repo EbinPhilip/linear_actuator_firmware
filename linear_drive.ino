@@ -1,4 +1,7 @@
 #include <AccelStepper.h>
+#include <ros.h>
+#include <linear_actuator_controller/LinearActuatorFeedback.h>
+#include <linear_actuator_controller/LinearActuatorInput.h>
 
 #include "linear_actuator.h"
 
@@ -19,6 +22,27 @@ unsigned int ledPin = 13;
 AccelStepper stepper = AccelStepper(motorInterfaceType, stepPin, dirPin);
 LinearActuator actuator(stepper, end_stop, homing_start);
 
+ros::NodeHandle nh;
+linear_actuator_controller::LinearActuatorFeedback feedback;
+ros::Publisher chatter("feedback", &feedback);
+
+void inputCb( const linear_actuator_controller::LinearActuatorInput& input)
+{
+  actuator.setTargetPosition(input.position);
+  actuator.setTargetSpeed(input.speed);
+  actuator.setMaxAcceleration(input.acceleration_max);
+  actuator.setMaxPosition(input.position_max);
+  actuator.setMaxSpeed(input.speed_max);
+  actuator.setEnabled(input.enabled);
+
+  feedback.position = actuator.getCurrentPosition();
+  feedback.speed = actuator.getCurrentSpeed();
+  feedback.active = (actuator.getCurrentMode() == Mode::ACTIVE);
+  chatter.publish( &feedback );
+}
+
+ros::Subscriber<linear_actuator_controller::LinearActuatorInput> sub("input", &inputCb );
+
 void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(end_stop_pin, INPUT_PULLUP);
@@ -36,12 +60,15 @@ void setup() {
   stepper.setMaxSpeed(5600);
   stepper.setAcceleration(2400);
 
-  Serial.begin(115200);
+  nh.initNode();
+  nh.advertise(chatter);
+  nh.subscribe(sub);
 }
 
 
 void loop() {
-  actuator.run();  
+  actuator.run();
+  nh.spinOnce();
 }
 
 void endStopISR()

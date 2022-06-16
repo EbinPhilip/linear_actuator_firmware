@@ -69,4 +69,13 @@ public:
     virtual Mode getMode() override;
 };
 
+class ErrorAction : public ModeAction
+{
+public:
+    ErrorAction(LinearActuator& actuator);
+    virtual void initialize() override;
+    virtual void run() override;
+    virtual Mode getMode() override;
+};
+
 #endif

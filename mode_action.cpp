@@ -206,7 +206,15 @@ void ActiveAction::run()
     AccelStepper& stepper = actuator_.getStepper();
     if (!actuator_.isEnabled())
     {
+        stepper.stop();
         actuator_.changeMode(Mode::READY);
+        return;
+    }
+    if (actuator_.getHomingStatus())
+    {
+        stepper.stop();
+        actuator_.changeMode(Mode::ERROR);
+        return;
     }
 
     if (stepper.targetPosition() != actuator_.getTargetPosition())
@@ -229,4 +237,24 @@ void ActiveAction::run()
 Mode ActiveAction::getMode()
 {
     return Mode::ACTIVE;
+}
+
+
+ErrorAction::ErrorAction(LinearActuator& actuator)
+    : ModeAction(actuator)
+{
+}
+
+void ErrorAction::initialize()
+{
+}
+
+void ErrorAction::run()
+{
+    actuator_.getStepper().stop();
+}
+
+Mode ErrorAction::getMode()
+{
+    return Mode::ERROR;
 }

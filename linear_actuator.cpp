@@ -7,7 +7,7 @@ LinearActuator::LinearActuator(AccelStepper &stepper, volatile bool &end_stop, v
       position_cmd_(0), speed_cmd_(0), max_position_(0),
       max_speed_(0), max_acceleration_(0), enabled_(false), starting_action_(*this),
       homing_action_(*this), adjusting_action_(*this), fine_homing_action_(*this),
-      ready_action_(*this), active_action_(*this), current_action_(&starting_action_)
+      ready_action_(*this), active_action_(*this),error_action_(*this), current_action_(&starting_action_)
 {
 }
 
@@ -52,6 +52,10 @@ void LinearActuator::changeMode(Mode mode)
     
     case Mode::ACTIVE:
       current_action_ = &active_action_;
+      break;
+    
+    case Mode::ERROR:
+      current_action_ = &error_action_;
       break;
 
     default:

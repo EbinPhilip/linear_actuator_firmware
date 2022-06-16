@@ -12,7 +12,8 @@ enum class Mode
     ADJUSTING,
     FINE_HOMING,
     READY,
-    ACTIVE
+    ACTIVE,
+    ERROR
 };
 
 class LinearActuator
@@ -70,6 +71,7 @@ protected:
     FineHomingAction fine_homing_action_;
     ReadyAction ready_action_;
     ActiveAction active_action_;
+    ErrorAction error_action_;
 
     ModeAction* current_action_;
 };

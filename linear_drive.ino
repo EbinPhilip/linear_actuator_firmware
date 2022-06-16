@@ -60,6 +60,13 @@ void setup() {
   stepper.setMaxSpeed(5600);
   stepper.setAcceleration(2400);
 
+  // case where actuator is at 0 position when powered on
+  // interrupt that responds to pin level change will miss this case
+  if (digitalRead(end_stop_pin) == LOW)
+  {
+    end_stop = true;
+  }
+
   nh.initNode();
   nh.advertise(chatter);
   nh.subscribe(sub);
@@ -67,6 +74,14 @@ void setup() {
 
 
 void loop() {
+  if (actuator.getCurrentMode() == Mode::READY)
+  {
+    digitalWrite(ledPin, HIGH);
+  }
+  else
+  {
+    digitalWrite(ledPin, LOW);
+  }
   actuator.run();
   nh.spinOnce();
 }

@@ -74,7 +74,8 @@ void setup() {
 
 
 void loop() {
-  if (actuator.getCurrentMode() == Mode::READY)
+  Mode mode = actuator.getCurrentMode();
+  if (mode == Mode::READY || mode == Mode::ACTIVE)
   {
     digitalWrite(ledPin, HIGH);
   }

@@ -72,12 +72,22 @@ void setup() {
   nh.subscribe(sub);
 }
 
+unsigned long last_blink_time = 0;
+bool led_status = HIGH;
 
 void loop() {
-  Mode mode = actuator.getCurrentMode();
-  if (mode == Mode::READY || mode == Mode::ACTIVE)
+  if (actuator.getCurrentMode() == Mode::READY)
   {
     digitalWrite(ledPin, HIGH);
+  }
+  else if (actuator.getCurrentMode() == Mode::ACTIVE)
+  {
+    if (millis() - last_blink_time > 1000)
+    {
+      digitalWrite(ledPin, led_status);
+      led_status = !led_status;
+      last_blink_time = millis();
+    }
   }
   else
   {

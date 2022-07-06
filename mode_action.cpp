@@ -199,12 +199,14 @@ ActiveAction::ActiveAction(LinearActuator& actuator)
 
 void ActiveAction::initialize()
 {
+    AccelStepper& stepper = actuator_.getStepper();
+    stepper.setAcceleration(actuator_.getMaxAcceleration());
 }
 
 void ActiveAction::run()
 {
     AccelStepper& stepper = actuator_.getStepper();
-    if (!actuator_.isEnabled())
+    if (!actuator_.isEnabled() || (millis() - actuator_.getTimeStamp() > 100))
     {
         stepper.stop();
         actuator_.changeMode(Mode::READY);
@@ -217,21 +219,13 @@ void ActiveAction::run()
         return;
     }
 
+
     if (stepper.targetPosition() != actuator_.getTargetPosition())
     {
+        stepper.setMaxSpeed(actuator_.getTargetSpeed());
         stepper.moveTo(actuator_.getTargetPosition());
-        stepper.setSpeed(actuator_.getTargetSpeed());
     }
-
-    if (stepper.distanceToGo()!= 0 &&
-    !(actuator_.getEndStopStatus() && abs(stepper.currentPosition())>200) )
-    {
-        stepper.runSpeed();
-    }
-    else
-    {
-        stepper.stop();
-    }
+    stepper.run();
 }
 
 Mode ActiveAction::getMode()

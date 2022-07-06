@@ -206,19 +206,22 @@ void ActiveAction::initialize()
 void ActiveAction::run()
 {
     AccelStepper& stepper = actuator_.getStepper();
+    // input timeout or actuator disabled
     if (!actuator_.isEnabled() || (millis() - actuator_.getTimeStamp() > 100))
     {
         stepper.stop();
         actuator_.changeMode(Mode::READY);
         return;
     }
-    if (actuator_.getHomingStatus())
+
+    // if end stop or homing button is pressed
+    if (actuator_.getHomingStatus()
+        || (actuator_.getEndStopStatus() && abs(stepper.currentPosition())>200)) // pos<=200 could keep the end stop pressed
     {
         stepper.stop();
         actuator_.changeMode(Mode::ERROR);
         return;
     }
-
 
     if (stepper.targetPosition() != actuator_.getTargetPosition())
     {

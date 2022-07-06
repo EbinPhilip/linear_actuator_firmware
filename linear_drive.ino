@@ -36,6 +36,7 @@ void inputCb( const linear_actuator_controller::LinearActuatorInput& input)
     actuator.setMaxPosition(input.position_max);
     actuator.setMaxSpeed(input.speed_max);
     actuator.setEnabled(input.enabled);
+    actuator.setTimeStamp(millis());
   }
   else
   {

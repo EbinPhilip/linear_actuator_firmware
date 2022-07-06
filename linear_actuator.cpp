@@ -5,7 +5,7 @@
 LinearActuator::LinearActuator(AccelStepper &stepper, volatile bool &end_stop, volatile bool &homing_start)
     : stepper_(stepper), end_stop_(end_stop), homing_start_(homing_start),
       position_cmd_(0), speed_cmd_(0), max_position_(0),
-      max_speed_(0), max_acceleration_(0), enabled_(false), starting_action_(*this),
+      max_speed_(0), max_acceleration_(0), timestamp_(0), enabled_(false), starting_action_(*this),
       homing_action_(*this), adjusting_action_(*this), fine_homing_action_(*this),
       ready_action_(*this), active_action_(*this),error_action_(*this), current_action_(&starting_action_)
 {
@@ -115,6 +115,11 @@ void LinearActuator::setMaxAcceleration(float max_acceleration)
   max_acceleration_ = max_acceleration;
 }
 
+void LinearActuator::setTimeStamp(unsigned long timestamp)
+{
+  timestamp_ = timestamp;
+}
+
 long LinearActuator::getMaxPosition()
 {
   return max_position_;
@@ -128,6 +133,11 @@ float LinearActuator::getMaxSpeed()
 float LinearActuator::getMaxAcceleration()
 {
   return max_acceleration_;
+}
+
+unsigned long LinearActuator::getTimeStamp()
+{
+  return timestamp_;
 }
 
 bool LinearActuator::isEnabled()

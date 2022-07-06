@@ -28,13 +28,20 @@ ros::Publisher chatter("feedback", &feedback);
 
 void inputCb( const linear_actuator_controller::LinearActuatorInput& input)
 {
-  actuator.setTargetPosition(input.position);
-  actuator.setTargetSpeed(input.speed);
-  actuator.setMaxAcceleration(input.acceleration_max);
-  actuator.setMaxPosition(input.position_max);
-  actuator.setMaxSpeed(input.speed_max);
-  actuator.setEnabled(input.enabled);
-
+  if (input.enabled)
+  {
+    actuator.setTargetPosition(input.position);
+    actuator.setTargetSpeed(input.speed);
+    actuator.setMaxAcceleration(input.acceleration_max);
+    actuator.setMaxPosition(input.position_max);
+    actuator.setMaxSpeed(input.speed_max);
+    actuator.setEnabled(input.enabled);
+  }
+  else
+  {
+    actuator.setEnabled(false);
+  }
+  
   feedback.position = actuator.getCurrentPosition();
   feedback.speed = actuator.getCurrentSpeed();
   feedback.active = (actuator.getCurrentMode() == Mode::ACTIVE);

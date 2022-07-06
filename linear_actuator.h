@@ -41,6 +41,7 @@ public:
     void setMaxPosition(long max_position);
     void setMaxSpeed(float max_speed);
     void setMaxAcceleration(float max_acceleration);
+    void setTimeStamp(unsigned long timestamp);
 
     bool isEnabled();
     void setEnabled(bool enabled);
@@ -48,6 +49,7 @@ public:
     long getMaxPosition();
     float getMaxSpeed();
     float getMaxAcceleration();
+    unsigned long getTimeStamp();
 
     void run();
 
@@ -62,6 +64,8 @@ protected:
     long max_position_;
     float max_speed_;
     float max_acceleration_;
+
+    unsigned long timestamp_;
 
     bool enabled_;
 
